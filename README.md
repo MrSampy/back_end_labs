@@ -20,13 +20,13 @@ To get started with this lab, follow these steps:
 git clone https://github.com/MrSampy/back_end_labs/
 cd back_end_labs/Lab1/Lab1
 ```
-2. Build the Docker image for our backend application. Replace name with a suitable name for your image.
+2. Build the Docker images defined in your docker-compose.yml file.
 ```bash
-docker build --tag name .
+docker-compose build
 ```
-3. Once the image is built, you can run the Docker container, mapping ports 5065 and 7292 from your host to port 80 in the container.
+3. Start your application using docker-compose up.
 ```bash
-docker run -p 5065:80 -p 7292:80 name
+docker-compose up
 ```
 4. Access your backend application in a web browser or via API calls: </br>
 Web Application: Open a web browser and navigate to http://localhost:5065. </br>
