@@ -18,6 +18,8 @@ EXPOSE 7292
 
 EXPOSE 5065
 
+ENV TZ=Europe/Kiev
+
 COPY --from=build /app/out .
 
 CMD ["dotnet", "Lab1.dll"]
