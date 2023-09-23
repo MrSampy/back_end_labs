@@ -31,3 +31,5 @@ docker-compose up
 4. Access your backend application in a web browser or via API calls: </br>
 Web Application: Open a web browser and navigate to http://localhost:5065. </br>
 API Endpoint: You can make API requests to http://localhost:7292. </br>
+
+5. Or you can access first lab by link https://lab1-n3a9.onrender.com.
