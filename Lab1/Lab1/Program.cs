@@ -19,8 +19,8 @@ app.MapHealthChecks("/healthcheck", new HealthCheckOptions
             new
             {
                 status = report.Status.ToString(),
-                date = DateTime.UtcNow
-            });
+                date = DateTime.Now
+            }, Formatting.Indented);
         context.Response.ContentType = MediaTypeNames.Application.Json;
         await context.Response.WriteAsync(result);
     }
