@@ -1,6 +1,7 @@
-var builder = WebApplication.CreateBuilder(args);
-var app = builder.Build();
+using Lab2;
 
-app.MapGet("/", () => "Hello World!");
+CreateHostBuilder(args).Build().Run();
 
-app.Run();
+static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
