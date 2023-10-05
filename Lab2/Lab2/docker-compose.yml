@@ -1,0 +1,9 @@
+version: '3'
+services:
+  lab2:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "7261:80" 
+      - "5031:80"
