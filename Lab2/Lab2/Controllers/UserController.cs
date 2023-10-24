@@ -12,7 +12,7 @@ namespace Lab2.Controllers
             new User() { Id = 2, Name = "Jhon" },
             new User() { Id = 3, Name = "Tom" },
             new User() { Id = 4, Name = "Serhiy" },
-            new User() { Id = 5, Name = "Gary" },
+            new User() { Id = 5, Name = "GaryLocal" },
         };
 
         public UserController() 
@@ -44,10 +44,10 @@ namespace Lab2.Controllers
         // POST: /user
         [Route("user")]
         [HttpPost]
-        public ActionResult AddUser([FromBody] User user)
+        public ActionResult<User> AddUser([FromBody] User user)
         {
             users.Add(user);
-            return new OkResult();
+            return new OkObjectResult(user);
         }
     }
 }

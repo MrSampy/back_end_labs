@@ -36,10 +36,10 @@ namespace Lab2.Controllers
 
         // POST: /category
         [HttpPost]
-        public ActionResult AddCategory([FromBody] Category category)
+        public ActionResult<Category> AddCategory([FromBody] Category category)
         {
             categories.Add(category);
-            return new OkResult();
+            return new ObjectResult(category);
         }
     }
 }

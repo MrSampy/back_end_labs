@@ -49,22 +49,22 @@ namespace Lab2.Controllers
 
         //GET: /record/id
         [HttpGet("{record_id:int}")]
-        public ActionResult<User> GetRecordById(int record_id)
+        public ActionResult<Record> GetRecordById(int record_id)
         {
             return new ObjectResult(records.FirstOrDefault(x => x.Id.Equals(record_id)));
         }
         //DELETE: /record/id
         [HttpDelete("{record_id:int}")]
-        public ActionResult<User> DeleteRecordById(int record_id)
+        public ActionResult<Record> DeleteRecordById(int record_id)
         {
             return new ObjectResult(records.Remove(records.FirstOrDefault(x => x.Id.Equals(record_id))));
         }
         // POST: /record
         [HttpPost]
-        public ActionResult AddRecord([FromBody] Record record)
+        public ActionResult<Record> AddRecord([FromBody] Record record)
         {
             records.Add(record);
-            return new OkResult();
+            return new ObjectResult(record);
         }
     }
 }
