@@ -20,7 +20,7 @@ namespace Lab3.Services
         {
             return await _unitOfWork.AccountRepository.GetAllAsync();
         }
-        public async Task TopUpBalance(int account_id, decimal amount)
+        public async Task<Account> TopUpBalance(int account_id, decimal amount)
         {
             var validationResult = await _validator.ValidateForTopUpBalance(account_id, amount);
             if (!validationResult.IsValid)
@@ -31,6 +31,7 @@ namespace Lab3.Services
             var account = await _unitOfWork.AccountRepository.GetByIdAsync(account_id);
             account.Balance += amount;
             await _unitOfWork.SaveAsync();
+            return account;
         }
 
         public async Task<Account> GetByIdAsync(int id)
