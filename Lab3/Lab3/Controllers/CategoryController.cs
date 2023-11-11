@@ -1,6 +1,8 @@
 ﻿using Lab3.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Lab3.Services;
+using Lab3.Services.Interfaces.Services;
 
 namespace Lab3.Controllers
 {
@@ -8,37 +10,48 @@ namespace Lab3.Controllers
     [ApiController]
     public class CategoryController
     {
-        private static List<Category> categories = new List<Category>() 
+        private readonly ICrud<Category> categoryService;
+        public CategoryController(ICrud<Category> categoryService)
         {
-            new Category { Id = 1, Name = "Food" },
-            new Category { Id = 2, Name = "Transport" },
-            new Category { Id = 3, Name = "Entertainment" },
-            new Category { Id = 4, Name = "Health" }
-        };
-
-        public CategoryController()
-        {
+            this.categoryService = categoryService;
         }
 
         //GET: /category
         [HttpGet]
-        public ActionResult<IEnumerable<Category>> GetCategories()
+        public async Task<ActionResult<IEnumerable<Category>>> GetCategories()
         {
-            return new ObjectResult(categories);
+            return new ObjectResult(await categoryService.GetAllAsync());
         }
 
         //DELETE: /category/id
         [HttpDelete("{id:int}")]
-        public ActionResult<Category> DeleteCategoryById(int id)
+        public async Task<ActionResult<Category>> DeleteCategoryById(int id)
         {
-            return new ObjectResult(categories.Remove(categories.FirstOrDefault(x => x.Id.Equals(id))));
+            Category result;
+            try
+            {
+                result = await categoryService.DeleteAsync(id);
+            }
+            catch (Exception e)
+            {
+                return new BadRequestObjectResult(e.Message);
+            }
+
+            return new ObjectResult(result);
         }
 
         // POST: /category
         [HttpPost]
-        public ActionResult<Category> AddCategory([FromBody] Category category)
+        public async Task<ActionResult<Category>> AddCategory([FromBody] Category category)
         {
-            categories.Add(category);
+            try
+            {
+                await categoryService.AddAsync(category);
+            }
+            catch (Exception e)
+            {
+                return new BadRequestObjectResult(e.Message);
+            }
             return new ObjectResult(category);
         }
     }
