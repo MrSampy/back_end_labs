@@ -1,4 +1,6 @@
 ﻿using Lab3.Models;
+using Lab3.Services;
+using Lab3.Services.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Lab3.Controllers
@@ -7,41 +9,26 @@ namespace Lab3.Controllers
     [ApiController]
     public class RecordController
     {
-        private static List<Record> records = new List<Record> 
+        private readonly IRecordService recordService;
+        public RecordController(IRecordService recordService)
         {
-            new Record { Id = 1, CategoryId = 1, UserId = 1, Date = DateTime.Now, Amount = 100 },
-            new Record { Id = 2, CategoryId = 2, UserId = 2, Date = DateTime.Now.AddDays(-1), Amount = 3453 },
-            new Record { Id = 3, CategoryId = 3, UserId = 3, Date = DateTime.Now.AddDays(-3), Amount = 4624 },
-            new Record { Id = 4, CategoryId = 3, UserId = 3, Date = DateTime.Now.AddDays(4), Amount = 2324 },
-            new Record { Id = 5, CategoryId = 4, UserId = 2, Date = DateTime.Now.AddDays(-3), Amount = 23324 },
-            new Record { Id = 6, CategoryId = 2, UserId = 4, Date = DateTime.Now.AddDays(1), Amount = 100 },
-            new Record { Id = 7, CategoryId = 2, UserId = 1, Date = DateTime.Now.AddDays(-2), Amount = 35654 },
-            new Record { Id = 8, CategoryId = 1, UserId = 5, Date = DateTime.Now.AddDays(2), Amount = 3445 },
-        };
-
-        public RecordController()
-        { 
+            this.recordService = recordService;
         }
 
         //GET: /record?user_id=1&category_id=2
         //GET: /record?user_id=2
         //GET: /record?category_id=2
         [HttpGet]
-        public ActionResult<IEnumerable<Record>> GeRecords([FromQuery] int? user_id = null,[FromQuery] int? category_id = null)
+        public async Task<ActionResult<IEnumerable<Record>>> GeRecords([FromQuery] int? user_id = null,[FromQuery] int? category_id = null)
         {
-            var result = records;
-            if (user_id == null && category_id == null) 
+            List<Record>? result;
+            try
             {
-                return new BadRequestObjectResult("Both user_id and category_id parameters are required.");
+                result = (List<Record>)await recordService.GetFilteredAsync(user_id, category_id);
             }
-
-            if (user_id != null) 
+            catch (Exception e)
             {
-                result = result.Where(x => x.UserId.Equals(user_id)).ToList();
-            }
-            if (category_id != null)
-            {
-                result = result.Where(x => x.CategoryId.Equals(category_id)).ToList();
+                return new BadRequestObjectResult(e.Message);
             }
 
             return new ObjectResult(result);
@@ -49,21 +36,48 @@ namespace Lab3.Controllers
 
         //GET: /record/id
         [HttpGet("{record_id:int}")]
-        public ActionResult<Record> GetRecordById(int record_id)
+        public async Task<ActionResult<Record>> GetRecordById(int record_id)
         {
-            return new ObjectResult(records.FirstOrDefault(x => x.Id.Equals(record_id)));
+            Record result;
+            try
+            {
+                result = await recordService.GetByIdAsync(record_id);
+            }
+            catch (Exception e)
+            {
+                return new BadRequestObjectResult(e.Message);
+            }
+
+            return new ObjectResult(result);
         }
         //DELETE: /record/id
         [HttpDelete("{record_id:int}")]
-        public ActionResult<Record> DeleteRecordById(int record_id)
+        public async Task<ActionResult<Record>> DeleteRecordById(int record_id)
         {
-            return new ObjectResult(records.Remove(records.FirstOrDefault(x => x.Id.Equals(record_id))));
+            Record result;
+            try
+            {
+                result = await recordService.DeleteAsync(record_id);
+            }
+            catch (Exception e)
+            {
+                return new BadRequestObjectResult(e.Message);
+            }
+
+            return new ObjectResult(result);
         }
         // POST: /record
         [HttpPost]
-        public ActionResult<Record> AddRecord([FromBody] Record record)
+        public async Task<ActionResult<Record>> AddRecord([FromBody] Record record)
         {
-            records.Add(record);
+            try
+            {
+                await recordService.AddAsync(record);
+            }
+            catch (Exception e)
+            {
+                return new BadRequestObjectResult(e.Message);
+            }
             return new ObjectResult(record);
         }
     }
