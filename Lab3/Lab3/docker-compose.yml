@@ -1,0 +1,23 @@
+version: '3'
+services:
+  lab3:
+    container_name: lab3
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "7013:80" 
+      - "5175:80"
+    depends_on:
+      - sql-server
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings:DefaultConnection=Server=sql-server;Database=Lab3DB;User=sa;Password=P@ssw0rd123;Encrypt=false;
+  sql-server:
+    container_name: sql-server
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment:
+      SA_PASSWORD: P@ssw0rd123
+      ACCEPT_EULA: Y
+    ports:
+      - "1433:1433"
