@@ -1,4 +1,6 @@
 ﻿using Lab3.Models;
+using Lab3.Services;
+using Lab3.Services.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Xml.Linq;
 
@@ -7,46 +9,68 @@ namespace Lab3.Controllers
     [ApiController]
     public class UserController
     {
-        private static List<User> users = new List<User>() {
-            new User() { Id = 1, Name = "Reobert" },
-            new User() { Id = 2, Name = "Jhon" },
-            new User() { Id = 3, Name = "Tom" },
-            new User() { Id = 4, Name = "Serhiy" },
-            new User() { Id = 5, Name = "GaryLocal" },
-        };
+        private readonly ICrud<User> userService;
 
-        public UserController() 
+        public UserController(ICrud<User> userService) 
         {            
+            this.userService = userService;
         }
 
         //GET: /users
         [Route("users")]
         [HttpGet]
-        public ActionResult<IEnumerable<User>> GetUsers()
+        public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
-            return new ObjectResult(users);
+            return new ObjectResult(await userService.GetAllAsync());
         }
 
         //GET: /user/id
         [Route("user/{user_id:int}")]
         [HttpGet]
-        public ActionResult<User> GetUserById(int user_id)
+        public async Task<ActionResult<User>> GetUserById(int user_id)
         {
-            return new ObjectResult(users.FirstOrDefault(x=>x.Id.Equals(user_id)));
+            User result;
+            try
+            {
+                result = await userService.GetByIdAsync(user_id);
+            }
+            catch (Exception e)
+            {
+                return new BadRequestObjectResult(e.Message);
+            }
+
+            return new ObjectResult(result);
         }
         //DELETE: /user/user_id
         [Route("user/{user_id:int}")]
         [HttpDelete]
-        public ActionResult<User> DeleteUserById(int user_id)
+        public async Task<ActionResult<User>> DeleteUserById(int user_id)
         {
-            return new ObjectResult(users.Remove(users.FirstOrDefault(x => x.Id.Equals(user_id))));
+            User result;
+            try
+            {
+                result = await userService.DeleteAsync(user_id);
+            }
+            catch (Exception e)
+            {
+                return new BadRequestObjectResult(e.Message);
+            }
+
+            return new ObjectResult(result);
         }
         // POST: /user
         [Route("user")]
         [HttpPost]
-        public ActionResult<User> AddUser([FromBody] User user)
+        public async Task<ActionResult<User>> AddUser([FromBody] User user)
         {
-            users.Add(user);
+            try
+            {
+                await userService.AddAsync(user);
+            }
+            catch (Exception e)
+            {
+                return new BadRequestObjectResult(e.Message);
+            }
             return new OkObjectResult(user);
         }
     }
