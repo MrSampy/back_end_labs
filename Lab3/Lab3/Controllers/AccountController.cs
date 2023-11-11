@@ -75,15 +75,16 @@ namespace Lab3.Controllers
         [HttpPost("topup")]
         public async Task<ActionResult<Account>> TopUpBalance([FromBody] TopUpBalanceModel model)
         {
+            Account result;
             try
             {
-                await accountService.TopUpBalance(model.AccountId, model.Amount);
+                result = await accountService.TopUpBalance(model.AccountId, model.Amount);
             }
             catch (Exception e)
             {
                 return new BadRequestObjectResult(e.Message);
             }
-            return new OkObjectResult(model);
+            return new OkObjectResult(result);
         }
     }
 }
