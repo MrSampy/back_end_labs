@@ -1,5 +1,13 @@
 services:
   - type: web
+    name: sql-server
+    env: docker
+    dockerfile: Lab3\Lab3\sql.Dockerfile
+    plan: free
+    numInstances: 1
+    autoDeploy: false
+    healthCheckPath: /
+  - type: web
     name: lab3
     env: docker
     dockerfile: Lab3\Lab3\Dockerfile
@@ -12,21 +20,5 @@ services:
         value: Development
       - key: ConnectionStrings__DefaultConnection
         value: Server=sql-server;Database=Lab3DB;User=sa;Password=P@ssw0rd123;Encrypt=false;
-    ports:
-      - protocol: tcp
-        exposedPort: 80
-        servicePort: 7013
-      - protocol: tcp
-        exposedPort: 80
-        servicePort: 5175
-    dependsOn:
+    requires:
       - sql-server
-
-  - type: web
-    name: sql-server
-    env: docker
-    dockerfile: Lab3\Lab3\sql.Dockerfile
-    plan: free
-    numInstances: 1
-    autoDeploy: false
-    healthCheckPath: /
