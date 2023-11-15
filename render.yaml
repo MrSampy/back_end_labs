@@ -2,7 +2,7 @@ services:
   - type: web
     name: lab3
     env: docker
-    dockerfile: Lab3/Lab3/Dockerfile
+    dockerfile: Lab3\Lab3\Dockerfile
     plan: free
     numInstances: 1
     autoDeploy: false
@@ -25,7 +25,7 @@ services:
   - type: web
     name: sql-server
     env: docker
-    dockerfile: Lab3/Lab3/sql.Dockerfile
+    dockerfile: Lab3\Lab3\sql.Dockerfile
     plan: free
     numInstances: 1
     autoDeploy: false
