@@ -1,4 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Newtonsoft.Json;
+using System.Net.Mime;
 
 namespace Lab2
 {
@@ -13,6 +16,8 @@ namespace Lab2
         {
             services.AddControllers();
 
+            services.AddHealthChecks();
+
             services.AddEndpointsApiExplorer();
 
         }
@@ -26,9 +31,26 @@ namespace Lab2
 
             app.UseHttpsRedirection();            
 
-            app.UseRouting();
+            app.UseRouting();        
 
-            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+            app.UseEndpoints(endpoints => { 
+                endpoints.MapControllers();
+                endpoints.MapHealthChecks("/healthcheck", new HealthCheckOptions
+                {
+                    ResponseWriter = async (context, report) =>
+                    {
+                        var result = JsonConvert.SerializeObject(
+                            new
+                            {
+                                status = report.Status.ToString(),
+                                date = DateTime.Now
+                            }, Formatting.Indented);
+                        context.Response.ContentType = MediaTypeNames.Application.Json;
+                        await context.Response.WriteAsync(result);
+                    }
+                });
+
+            });
 
         }
 

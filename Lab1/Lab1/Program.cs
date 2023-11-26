@@ -12,7 +12,6 @@ var app = builder.Build();
 
 app.MapHealthChecks("/healthcheck", new HealthCheckOptions
 {
-    // Customize the response details
     ResponseWriter = async (context, report) =>
     {
         var result = JsonConvert.SerializeObject(
