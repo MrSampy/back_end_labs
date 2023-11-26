@@ -6,8 +6,11 @@ using Lab3.Services.Interfaces.Services;
 using Lab3.Services.Interfaces.Validators;
 using Lab3.Services.Validators;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.InMemory;
+using Newtonsoft.Json;
+using System.Net.Mime;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Lab3
@@ -74,6 +77,8 @@ namespace Lab3
 
             services.AddControllers();
 
+            services.AddHealthChecks();
+
             services.AddEndpointsApiExplorer();
         }
 
@@ -134,7 +139,23 @@ namespace Lab3
 
             app.UseRouting();
 
-            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+            app.UseEndpoints(endpoints => {
+                endpoints.MapControllers();
+                endpoints.MapHealthChecks("/healthcheck", new HealthCheckOptions
+                {
+                    ResponseWriter = async (context, report) =>
+                    {
+                        var result = JsonConvert.SerializeObject(
+                            new
+                            {
+                                status = report.Status.ToString(),
+                                date = DateTime.Now
+                            }, Formatting.Indented);
+                        context.Response.ContentType = MediaTypeNames.Application.Json;
+                        await context.Response.WriteAsync(result);
+                    }
+                });
+            });
 
         }
 
