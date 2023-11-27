@@ -1,9 +1,11 @@
 services:
   - type: web
     name: lab3
-    env:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings:DefaultConnection=Server=sql-server;Database=Lab3DB;User=sa;Password=P@ssw0rd123;Encrypt=false
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT 
+        value: Development
+      - key: ConnectionStrings_DefaultConnection 
+        value: Server=sql-server;Database=Lab3DB;User=sa;Password=P@ssw0rd123;Encrypt=false
     buildCommand: docker build -t lab3 -f Lab3/Lab3/Dockerfile lab3
     startCommand: docker run --name lab3 -p 7013:80 -p 5175:80 --link sql-server lab3
 
