@@ -1,22 +1,13 @@
 services:
   - type: web
-    name: sql-server
-    env: docker
-    dockerfilePath: ./Lab3/Lab3/sql.Dockerfile
-    plan: free
-    numInstances: 1
-    autoDeploy: false
-    healthCheckPath: /
-  - type: web
     name: lab3
-    env: docker
-    dockerfilePath: ./Lab3/Lab3/Dockerfile
-    plan: free
-    numInstances: 1
-    autoDeploy: false
-    healthCheckPath: /
-    envVars:
-      - key: ASPNETCORE_ENVIRONMENT
-        value: Development
-      - key: ConnectionStrings__DefaultConnection
-        value: Server=sql-server;Database=Lab3DB;User=sa;Password=P@ssw0rd123;Encrypt=false;
+    env:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings:DefaultConnection=Server=sql-server;Database=Lab3DB;User=sa;Password=P@ssw0rd123;Encrypt=false
+    buildCommand: docker build -t lab3 -f Lab3/Lab3/Dockerfile lab3
+    startCommand: docker run --name lab3 -p 7013:80 -p 5175:80 --link sql-server lab3
+
+  - type: web
+    name: sql-server
+    buildCommand: docker build -t sql-server -f Lab3/Lab3/sql.Dockerfile .
+    startCommand: docker run --name sql-server sql-server
