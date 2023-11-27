@@ -1,17 +1,22 @@
 services:
+
   - type: web
     runtime: docker
     name: lab3
+    dockerFile: Lab3/Lab3/Dockerfile
+    numInstances: 1
     envVars:
-      - key: ASPNETCORE_ENVIRONMENT 
+      - key: ASPNETCORE_ENVIRONMENT
         value: Development
-      - key: ConnectionStrings_DefaultConnection 
+      - key: ConnectionStrings_DefaultConnection  
         value: Server=sql-server;Database=Lab3DB;User=sa;Password=P@ssw0rd123;Encrypt=false
-    buildCommand: docker build -t lab3 -f Lab3/Lab3/Dockerfile lab3
-    startCommand: docker run --name lab3 -p 7013:80 -p 5175:80 --link sql-server lab3
+    deployType: container
+    ports:
+      - port: 80
+        healthcheck: true
 
   - type: web
     runtime: docker
     name: sql-server
-    buildCommand: docker build -t sql-server -f Lab3/Lab3/sql.Dockerfile .
-    startCommand: docker run --name sql-server sql-server
+    dockerFile: Lab3/Lab3/sql.Dockerfile
+    numInstances: 1
