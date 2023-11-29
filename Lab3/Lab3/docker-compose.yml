@@ -10,9 +10,6 @@ services:
       - "5175:80"
     depends_on:
       - sql-server
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings:DefaultConnection=Server=sql-server;Database=Lab3DB;User=sa;Password=P@ssw0rd123;Encrypt=false;
   sql-server:
     container_name: sql-server
     build:
