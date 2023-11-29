@@ -1,22 +1,18 @@
 services:
   - type: web
+    runtime: docker
     name: sql-server
-    env: docker
-    dockerfilePath: ./Lab3/Lab3/sql.Dockerfile
-    plan: free
+    dockerfilePath: Lab3/Lab3/sql.Dockerfile
     numInstances: 1
-    autoDeploy: false
-    healthCheckPath: /
   - type: web
+    runtime: docker
     name: lab3
-    env: docker
-    dockerfilePath: ./Lab3/Lab3/Dockerfile
-    plan: free
+    dockerfilePath: Lab3/Lab3/Dockerfile
     numInstances: 1
-    autoDeploy: false
-    healthCheckPath: /
     envVars:
+      - key: PORT
+        value: 7013
       - key: ASPNETCORE_ENVIRONMENT
         value: Development
-      - key: ConnectionStrings__DefaultConnection
-        value: Server=sql-server;Database=Lab3DB;User=sa;Password=P@ssw0rd123;Encrypt=false;
+      - key: ConnectionStrings_DefaultConnection  
+        value: Server=sql-server;Database=Lab3DB;User=sa;Password=P@ssw0rd123;Encrypt=false
