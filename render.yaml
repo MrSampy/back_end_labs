@@ -9,6 +9,4 @@ services:
     name: lab3
     env: docker
     dockerfilePath: ./Lab3/Lab3/Dockerfile
-    envVars: :
-      - key: PORT
-        value: "7013:80"
+    envVars: []
