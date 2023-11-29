@@ -9,9 +9,6 @@ services:
     name: lab3
     env: docker
     dockerfilePath: ./Lab3/Lab3/Dockerfile
-    envVars: []
-    ports:
-      - value: 7013
-      - value: 5175
-    dependsOn:
-      - sql-server
+    envVars: :
+      - key: PORT
+        value: "7013:80"
