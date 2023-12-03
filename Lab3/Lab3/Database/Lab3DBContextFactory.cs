@@ -15,7 +15,7 @@ namespace Lab3.Database
             var builder = new DbContextOptionsBuilder<Lab3DBContext>();
             var connectionString = configuration.GetConnectionString("DefaultConnection");
 
-            builder.UseSqlServer(connectionString);
+            builder.UseNpgsql(connectionString, sqlServerOptions => sqlServerOptions.EnableRetryOnFailure());
 
             return new Lab3DBContext(builder.Options);
         }

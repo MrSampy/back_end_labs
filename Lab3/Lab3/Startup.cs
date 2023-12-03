@@ -25,26 +25,23 @@ namespace Lab3
         public void ConfigureServices(IServiceCollection services)
         {
             #region Database
-            string connection = Configuration.GetConnectionString("DefaultConnection")!;
+            string connection = Configuration.GetConnectionString("PostgreSQLConnection")!;
 
-            var optionsBuilder = new DbContextOptionsBuilder<Lab3DBContext>().UseSqlServer(connection, sqlServerOptions => sqlServerOptions.EnableRetryOnFailure());
+            var optionsBuilder = new DbContextOptionsBuilder<Lab3DBContext>().UseNpgsql(connection, sqlServerOptions => sqlServerOptions.EnableRetryOnFailure());
 
             var options = optionsBuilder.Options;
 
             var context = new Lab3DBContext(options);
 
-            if (!context.Database.CanConnect())
-            {
-                context.Database.Migrate();
+            context.Database.EnsureCreated();
 
-                SeedData(context);
-            }
+            SeedData(context);
 
             var unitOfWork = new UnitOfWork(context);
 
             services.AddDbContext<Lab3DBContext>(options =>
             {
-                options.UseSqlServer(connection, sqlServerOptions => sqlServerOptions.EnableRetryOnFailure());
+                options.UseNpgsql(connection, sqlServerOptions => sqlServerOptions.EnableRetryOnFailure());
             });            
 
             services.AddSingleton<IUnitOfWork>(x => unitOfWork);
@@ -105,14 +102,14 @@ namespace Lab3
             );
             context.SaveChanges();
             context.Records.AddRange(
-                new Record { UserId = 1, CategoryId = 1, Date = DateTime.Now, Amount = 200 },
-                new Record { UserId = 1, CategoryId = 2, Date = DateTime.Now, Amount = 150 },
-                new Record { UserId = 2, CategoryId = 1, Date = DateTime.Now, Amount = 300 },
-                new Record { UserId = 3, CategoryId = 3, Date = DateTime.Now, Amount = 250 },
-                new Record { UserId = 4, CategoryId = 2, Date = DateTime.Now, Amount = 175 },
-                new Record { UserId = 5, CategoryId = 1, Date = DateTime.Now, Amount = 350 },
-                new Record { UserId = 6, CategoryId = 4, Date = DateTime.Now, Amount = 420 },
-                new Record { UserId = 7, CategoryId = 3, Date = DateTime.Now, Amount = 275 }
+                new Record { UserId = 1, CategoryId = 1, Date = DateTime.Now.ToUniversalTime(), Amount = 200 },
+                new Record { UserId = 1, CategoryId = 2, Date = DateTime.Now.ToUniversalTime(), Amount = 150 },
+                new Record { UserId = 2, CategoryId = 1, Date = DateTime.Now.ToUniversalTime(), Amount = 300 },
+                new Record { UserId = 3, CategoryId = 3, Date = DateTime.Now.ToUniversalTime(), Amount = 250 },
+                new Record { UserId = 4, CategoryId = 2, Date = DateTime.Now.ToUniversalTime(), Amount = 175 },
+                new Record { UserId = 5, CategoryId = 1, Date = DateTime.Now.ToUniversalTime(), Amount = 350 },
+                new Record { UserId = 6, CategoryId = 4, Date = DateTime.Now.ToUniversalTime(), Amount = 420 },
+                new Record { UserId = 7, CategoryId = 3, Date = DateTime.Now.ToUniversalTime(), Amount = 275 }
             );
             context.SaveChanges();
             context.Accounts.AddRange(

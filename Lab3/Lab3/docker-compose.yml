@@ -9,9 +9,9 @@ services:
       - "7013:80" 
       - "5175:80"
     depends_on:
-      - sql-server
-  sql-server:
-    container_name: sql-server
+      - postgresql-server
+  postgresql-server:
+    container_name: postgresql-server
     build:
       context: .
       dockerfile: sql.Dockerfile

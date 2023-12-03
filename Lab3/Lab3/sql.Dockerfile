@@ -1,6 +1,10 @@
-FROM mcr.microsoft.com/mssql/server:2019-latest
+# Use the official PostgreSQL image from Docker Hub
+FROM postgres:latest
 
-ENV SA_PASSWORD=P@ssw0rd123
-ENV ACCEPT_EULA=Y
+# Set environment variables for PostgreSQL
+ENV POSTGRES_DB=Lab3DB
+ENV POSTGRES_USER=sa
+ENV POSTGRES_PASSWORD=P@ssw0rd123
 
-EXPOSE 1433
+# Expose PostgreSQL default port
+EXPOSE 5432

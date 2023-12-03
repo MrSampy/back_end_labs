@@ -9,8 +9,10 @@ namespace Lab3.Database
         public DbSet<Category> Categories { get; set; }
         public DbSet<Record> Records { get; set; }
         public DbSet<Account> Accounts { get; set; }
-
-        public Lab3DBContext(DbContextOptions<Lab3DBContext> options) : base(options) { }
+        public Lab3DBContext(DbContextOptions<Lab3DBContext> options) 
+            : base(options) 
+        {
+        }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Account>()
@@ -43,7 +45,8 @@ namespace Lab3.Database
                 .HasOne(u => u.Account)
                 .WithOne(a => a.User)
                 .HasForeignKey<Account>(a => a.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Cascade); 
+            
         }
     }
 }
