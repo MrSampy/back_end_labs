@@ -56,6 +56,7 @@ namespace Lab4.Services.Validators
             return true;
         }
 
+        //Verify with base iterations
         public static bool Verify(string password, string hashedPassword)
         {
             return Verify(password, hashedPassword, BaseIterations);
