@@ -7,6 +7,9 @@ namespace Lab4.Models
     {
         [Required]
         public string Name { get; set; }
+
+        [Required]
+        public string Password { get; set; }
         [JsonIgnore]
         public virtual ICollection<Record>? Records { get; set; }
         [JsonIgnore]
