@@ -2,11 +2,13 @@
 using Lab4.Services;
 using Lab4.Services.Interfaces.Services;
 using Lab4.Services.Interfaces.Validators;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Xml.Linq;
 
 namespace Lab4.Controllers
 {
+    [Authorize]
     [Route("[controller]")]
     [ApiController]
     public class AccountController:Controller
