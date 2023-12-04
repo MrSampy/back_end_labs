@@ -25,19 +25,37 @@ namespace Lab3
         public void ConfigureServices(IServiceCollection services)
         {
             #region Database
-            string connection = Configuration.GetConnectionString("PostgreSQLConnection")!;
+            string connection = Configuration.GetConnectionString("PostgreSQLConnection2")!;
 
             var optionsBuilder = new DbContextOptionsBuilder<Lab3DBContext>().UseNpgsql(connection, sqlServerOptions => sqlServerOptions.EnableRetryOnFailure());
 
             var options = optionsBuilder.Options;
+            using (var context = new Lab3DBContext(options))
+            {
+                var canConnect = false;
 
-            var context = new Lab3DBContext(options);
+                try
+                {
+                    canConnect = context.Database.CanConnect();
 
-            context.Database.EnsureCreated();
+                    context.Users.FirstOrDefault();
+                    context.Categories.FirstOrDefault();
+                    context.Records.FirstOrDefault();
+                    context.Accounts.FirstOrDefault();
+                }
+                catch
+                {
+                    canConnect = false;
+                }
 
-            SeedData(context);
+                if (!canConnect)
+                {
+                    context.Database.EnsureCreated();
+                    SeedData(context);
+                }
+            }
 
-            var unitOfWork = new UnitOfWork(context);
+            var unitOfWork = new UnitOfWork(new Lab3DBContext(options));
 
             services.AddDbContext<Lab3DBContext>(options =>
             {
