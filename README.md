@@ -113,4 +113,4 @@ API Endpoint: You can make API requests to http://localhost:5175. </br>
 
 5. Or you can access first lab by link https://lab3-7kg4.onrender.com.
 
-6. Access postman enviroment using link .
+6. Access postman enviroment using link https://www.postman.com/galactic-water-326171/workspace/lab3/overview.
