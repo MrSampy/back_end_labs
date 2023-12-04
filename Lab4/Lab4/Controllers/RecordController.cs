@@ -1,10 +1,12 @@
 ﻿using Lab4.Models;
 using Lab4.Services;
 using Lab4.Services.Interfaces.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Lab4.Controllers
 {
+    [Authorize]
     [Route("[controller]")]
     [ApiController]
     public class RecordController
