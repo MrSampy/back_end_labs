@@ -2,15 +2,16 @@
 using Lab4.Models;
 using Lab4.Services.Interfaces.Services;
 using Lab4.Services.Interfaces.Validators;
+using Lab4.Services.Validators;
 
 namespace Lab4.Services
 {
-    public class UserService:ICrud<User>
+    public class UserService: IUserService
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IValidator<User> _validator;
+        private readonly IUserValidatorr _validator;
 
-        public UserService(IUnitOfWork unitOfWork, IValidator<User> validator)
+        public UserService(IUnitOfWork unitOfWork, IUserValidatorr validator)
         {
             _unitOfWork = unitOfWork;
             _validator = validator;
@@ -39,6 +40,7 @@ namespace Lab4.Services
             {
                 throw new Exception(validationResult.ToString());
             }
+            model.Password = SecurePasswordHasher.Hash(model.Password);
             await _unitOfWork.UserRepository.AddAsync(model);
             await _unitOfWork.SaveAsync();
         }
@@ -53,6 +55,17 @@ namespace Lab4.Services
             var entity = await _unitOfWork.UserRepository.DeleteByIdAsync(modelId);
             await _unitOfWork.SaveAsync();
             return entity;
+        }
+
+        public async Task<bool> LogIn(User user)
+        {
+            var validationResult = await _validator.ValidateForLogIn(user);
+            if (!validationResult.IsValid)
+            {
+                throw new Exception(validationResult.ToString());
+            }
+            var userToLogIn = (await _unitOfWork.UserRepository.GetAllAsync()).First(x=>x.Name.Equals(user.Name));
+            return SecurePasswordHasher.Verify(user.Password, userToLogIn.Password);
         }
     }
 }
