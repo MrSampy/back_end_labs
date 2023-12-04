@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Lab4.Services;
 using Lab4.Services.Interfaces.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Lab4.Controllers
 {
+    [Authorize]
     [Route("[controller]")]
     [ApiController]
     public class CategoryController
