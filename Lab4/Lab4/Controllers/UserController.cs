@@ -11,6 +11,7 @@ using System.Xml.Linq;
 
 namespace Lab4.Controllers
 {
+    //Controller for user handling
     [ApiController]
     public class UserController
     {
