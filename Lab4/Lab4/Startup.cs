@@ -28,7 +28,7 @@ namespace Lab4
         public void ConfigureServices(IServiceCollection services)
         {
             #region Database
-            string connection = Configuration.GetConnectionString("PostgreSQLConnection")!;
+            string connection = Configuration.GetConnectionString("PostgreSQLConnection2")!;
 
             var optionsBuilder = new DbContextOptionsBuilder<Lab4DBContext>().UseNpgsql(connection, sqlServerOptions => sqlServerOptions.EnableRetryOnFailure());
 
